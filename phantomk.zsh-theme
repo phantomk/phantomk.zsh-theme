@@ -10,11 +10,6 @@ PK_VCS_PROMPT_CLEAN=" %{$fg[green]%}o"
 
 # nvm info
 local nvm_info='$(nvm_prompt_info)'
-ZSH_THEME_NVM_PROMPT_PREFIX=" [node:"
-ZSH_THEME_NVM_PROMPT_SUFFIX="]"
-
-# nvm info
-local nvm_info='$(nvm_prompt_info)'
 ZSH_THEME_NVM_PROMPT_PREFIX=" node:"
 ZSH_THEME_NVM_PROMPT_SUFFIX=""
 
@@ -29,6 +24,19 @@ gvm_prompt_info() {
   [[ "${gvm_prompt}x" == "x" ]] && return
   gvm_prompt=${${gvm_prompt:13}% *}
   echo "${ZSH_THEME_GVM_PROMPT_PREFIX}${gvm_prompt}${ZSH_THEME_GVM_PROMPT_SUFFIX}"
+}
+
+# dvm info
+local dvm_info='$(dvm_prompt_info)'
+ZSH_THEME_DVM_PROMPT_PREFIX=" deno:"
+ZSH_THEME_DVM_PROMPT_SUFFIX=""
+
+dvm_prompt_info() {
+  local dvm_prompt
+  dvm_prompt=$(deno -V 2>/dev/null)
+  [[ "${dvm_prompt}x" == "x" ]] && return
+  dvm_prompt=${${dvm_prompt:5}% *}
+  echo "${ZSH_THEME_DVM_PROMPT_PREFIX}${dvm_prompt}${ZSH_THEME_DVM_PROMPT_SUFFIX}"
 }
 
 # Git info
@@ -56,14 +64,17 @@ PK_hg_prompt_info() {
 
 local exit_code="%(?,,C:%{$fg[red]%}%?%{$reset_color%})"
 
+
+# iterm2 下只支持 iterm2 的 主题color，无效的为 iterm 主题默认
 PROMPT="
 %{$terminfo[bold]$fg[blue]%}#%{$reset_color%} \
 %(#,%{$bg[yellow]%}%{$fg[black]%}%n%{$reset_color%},%{$fg[cyan]%}%n) \
 %{$terminfo[bold]$fg[yellow]%}%~%{$reset_color%}\
 ${hg_info}\
 %{$fg[green]%}${nvm_info}%{$reset_color%}\
+%{$fg[white]%}${dvm_info}%{$reset_color%}\
 %{$fg[cyan]%}${gvm_info}%{$reset_color%}\
 %{$fg[blue]%}${git_info}%{$reset_color%}\
  \
-%{$fg[white]%}[%*] $exit_code
+%{$fg[blue]%}[%*] $exit_code
 %{$terminfo[bold]$fg[green]%}$ %{$reset_color%}"
