@@ -39,6 +39,19 @@ dvm_prompt_info() {
   echo "${ZSH_THEME_DVM_PROMPT_PREFIX}${dvm_prompt}${ZSH_THEME_DVM_PROMPT_SUFFIX}"
 }
 
+# rustc info
+local rustc_info='$(rustc_prompt_info)'
+ZSH_THEME_RUSTC_PROMPT_PREFIX=" rust:"
+ZSH_THEME_RUSTC_PROMPT_SUFFIX=""
+
+rustc_prompt_info() {
+  local rustc_prompt
+  rustc_prompt=$(rustc --version 2>/dev/null)
+  [[ "${rustc_prompt}x" == "x" ]] && return
+  rustc_prompt=${${rustc_prompt:6:6}% *}
+  echo "${ZSH_THEME_RUSTC_PROMPT_PREFIX}${rustc_prompt}${ZSH_THEME_RUSTC_PROMPT_SUFFIX}"
+}
+
 # Git info
 local git_info='$(git_prompt_info)'
 ZSH_THEME_GIT_PROMPT_PREFIX=" git:"
@@ -74,6 +87,7 @@ ${hg_info}\
 %{$fg[green]%}${nvm_info}%{$reset_color%}\
 %{$fg[white]%}${dvm_info}%{$reset_color%}\
 %{$fg[cyan]%}${gvm_info}%{$reset_color%}\
+%{$fg[black]%}${rustc_info}%{$reset_color%}\
 %{$fg[blue]%}${git_info}%{$reset_color%}\
  \
 %{$fg[blue]%}[%*] $exit_code
